@@ -12,14 +12,14 @@ public static class TomoyoStarterData
         new TomoyoRole
         {
             Id = "1",
-            Name = "SuperAdmin",
-            NormalizedName = "SUPERADMIN"
+            Name = "Superuser",
+            NormalizedName = "SUPERUSER"
         },
         new TomoyoRole
         {
             Id = "2",
-            Name = "Admin",
-            NormalizedName = "ADMIN"
+            Name = "Staff",
+            NormalizedName = "Staff"
         },
         new TomoyoRole
         {

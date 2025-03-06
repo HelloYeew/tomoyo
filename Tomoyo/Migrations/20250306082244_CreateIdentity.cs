@@ -164,8 +164,8 @@ namespace Tomoyo.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1", null, "TomoyoRole", "SuperAdmin", "SUPERADMIN" },
-                    { "2", null, "TomoyoRole", "Admin", "ADMIN" },
+                    { "1", null, "TomoyoRole", "Superuser", "SUPERUSER" },
+                    { "2", null, "TomoyoRole", "Staff", "Staff" },
                     { "3", null, "TomoyoRole", "User", "USER" }
                 });
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tomoyo.Data;
 
@@ -10,9 +11,11 @@ using Tomoyo.Data;
 namespace Tomoyo.Migrations
 {
     [DbContext(typeof(TomoyoDatabaseContext))]
-    partial class TomoyoDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250306082244_CreateIdentity")]
+    partial class CreateIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -228,14 +231,14 @@ namespace Tomoyo.Migrations
                         new
                         {
                             Id = "1",
-                            Name = "SuperAdmin",
-                            NormalizedName = "SUPERADMIN"
+                            Name = "Superuser",
+                            NormalizedName = "SUPERUSER"
                         },
                         new
                         {
                             Id = "2",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            Name = "Staff",
+                            NormalizedName = "Staff"
                         },
                         new
                         {

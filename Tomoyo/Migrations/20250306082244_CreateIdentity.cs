@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Tomoyo.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateIdentitySchema : Migration
+    public partial class CreateIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,11 +18,15 @@ namespace Tomoyo.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
                 },
-                constraints: table => { table.PrimaryKey("PK_AspNetRoles", x => x.Id); });
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
@@ -42,7 +48,10 @@ namespace Tomoyo.Migrations
                     LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
-                constraints: table => { table.PrimaryKey("PK_AspNetUsers", x => x.Id); });
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
@@ -148,6 +157,16 @@ namespace Tomoyo.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "1", null, "TomoyoRole", "Superuser", "SUPERUSER" },
+                    { "2", null, "TomoyoRole", "Staff", "Staff" },
+                    { "3", null, "TomoyoRole", "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(

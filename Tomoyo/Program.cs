@@ -34,7 +34,7 @@ builder.Services.AddDbContext<TomoyoDatabaseContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<TomoyoUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddRoles<>()
+    .AddRoles<TomoyoRole>()
     .AddEntityFrameworkStores<TomoyoDatabaseContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();

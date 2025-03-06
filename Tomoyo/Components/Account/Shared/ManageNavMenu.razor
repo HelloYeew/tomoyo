@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Tomoyo.Data
 
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<TomoyoUser> SignInManager
 
 <MudNavMenu>
     <MudNavLink Href="Account/Manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>

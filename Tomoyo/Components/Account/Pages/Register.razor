@@ -7,10 +7,10 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Tomoyo.Data
 
-@inject UserManager<ApplicationUser> UserManager
-@inject IUserStore<ApplicationUser> UserStore
-@inject SignInManager<ApplicationUser> SignInManager
-@inject IEmailSender<ApplicationUser> EmailSender
+@inject UserManager<TomoyoUser> UserManager
+@inject IUserStore<TomoyoUser> UserStore
+@inject SignInManager<TomoyoUser> SignInManager
+@inject IEmailSender<TomoyoUser> EmailSender
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
@@ -111,27 +111,27 @@
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
-    private static ApplicationUser CreateUser()
+    private static TomoyoUser CreateUser()
     {
         try
         {
-            return Activator.CreateInstance<ApplicationUser>();
+            return Activator.CreateInstance<TomoyoUser>();
         }
         catch
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                                                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(TomoyoUser)}'. " +
+                                                $"Ensure that '{nameof(TomoyoUser)}' is not an abstract class and has a parameterless constructor.");
         }
     }
 
-    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    private IUserEmailStore<TomoyoUser> GetEmailStore()
     {
         if (!UserManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
 
-        return (IUserEmailStore<ApplicationUser>)UserStore;
+        return (IUserEmailStore<TomoyoUser>)UserStore;
     }
 
     private sealed class InputModel

@@ -4,8 +4,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Tomoyo.Data
 
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<TomoyoUser> UserManager
+@inject SignInManager<TomoyoUser> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
 

@@ -5,8 +5,8 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Tomoyo.Data
 
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<TomoyoUser> UserManager
+@inject SignInManager<TomoyoUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Confirm email change</PageTitle>

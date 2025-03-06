@@ -2,7 +2,7 @@
 
 @inject NavigationManager Navigation
 
-<MudThemeProvider/>
+<MudThemeProvider Theme="_theme"/>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
@@ -43,7 +43,9 @@
         <NavMenu/>
     </MudDrawer>
     <MudMainContent Class="mt-16 pa-4">
-        @Body
+        <MudContainer MaxWidth="MaxWidth.Large">
+            @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 
@@ -56,4 +58,15 @@
 
 @code {
     private bool _drawerOpen = true;
+
+    private MudTheme _theme = new MudTheme()
+    {
+        Typography = new Typography()
+        {
+            Default = new DefaultTypography()
+            {
+                FontFamily = new[] { "M PLUS 1p", "sans-serif" }
+            }
+        }
+    };
 }

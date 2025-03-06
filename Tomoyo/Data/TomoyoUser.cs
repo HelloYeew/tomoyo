@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Tomoyo.Data;
 
-// Add profile data for application users by adding properties to the ApplicationUser class
 public class TomoyoUser : IdentityUser
 {
+    public BaseProfile? BaseProfile { get; set; }
+    public CosplayerProfile? CosplayerProfile { get; set; }
+    public PhotographerProfile? PhotographerProfile { get; set; }
 }

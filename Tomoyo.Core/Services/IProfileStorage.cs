@@ -4,5 +4,5 @@ namespace Tomoyo.Core.Services;
 
 public interface IProfileStorage
 {
-    Task<Stream> UploadAvatarAsync(string userId, ProfileType profileType, Stream stream, string contentType, CancellationToken cancellationToken = default);
+    Task<string> UploadAvatarAsync(string userId, ProfileType profileType, byte[] file, string fileName, CancellationToken cancellationToken = default);
 }

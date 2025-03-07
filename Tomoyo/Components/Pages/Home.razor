@@ -1,5 +1,18 @@
 ﻿@page "/"
 
+@attribute [Authorize]
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Tomoyo.Core.Models
+@using Tomoyo.Core.Services
+
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+@inject UserManager<TomoyoUser> UserManager
+@inject ISnackbar Snackbar
+@inject IProfileStorage ProfileStorage
+
 <PageTitle>Home</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
@@ -57,3 +70,35 @@
         More details
     </MudLink>
 </MudText>
+
+<MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadAvatar">
+    <ActivatorContent>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.CloudUpload">
+            Upload Avatar
+        </MudButton>
+    </ActivatorContent>
+</MudFileUpload>
+
+@code
+{
+    private ClaimsPrincipal user = null!;
+    
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        user = authstate.User;
+    }
+
+    private async void UploadAvatar(IBrowserFile file)
+    {
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream(maxAllowedSize: 5L * 1024L * 1024L).ReadAsync(buffer);
+        var fileName = await ProfileStorage.UploadAvatarAsync(user.Identity.Name, ProfileType.Base, buffer, file.Name);
+        
+        Snackbar.Add($"Avatar uploaded successfully: {fileName}", Severity.Success);
+    }
+}

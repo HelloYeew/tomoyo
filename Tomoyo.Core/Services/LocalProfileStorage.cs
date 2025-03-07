@@ -1,5 +1,6 @@
 using Tomoyo.Core.Configurations;
 using Tomoyo.Core.Models;
+using Tomoyo.Core.Utilities;
 
 namespace Tomoyo.Core.Services;
 
@@ -13,15 +14,25 @@ public class LocalProfileStorage : IProfileStorage
     public LocalProfileStorage(string? baseDirectory = null)
     {
         BaseDirectory = baseDirectory ?? CoreSettings.ProfileStorageBaseDirectory;
-        // Ensure the directory exists
         if (!Directory.Exists(GetBaseDirectoryFullPath()))
             Directory.CreateDirectory(GetBaseDirectoryFullPath());
+        if (!Directory.Exists(GetAvatarDirectoryFullPath()))
+            Directory.CreateDirectory(GetAvatarDirectoryFullPath());
+        if (!Directory.Exists(GetCoverDirectoryFullPath()))
+            Directory.CreateDirectory(GetCoverDirectoryFullPath());
     }
     
-    public Task<Stream> UploadAvatarAsync(string userId, ProfileType profileType, Stream stream, string contentType, CancellationToken cancellationToken = default)
+    public Task<string> UploadAvatarAsync(string userId, ProfileType profileType, byte[] file, string fileName, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        // Save the avatar to the file system
+        string newFileName = FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Avatar, profileType, fileName);
+        string filePath = Path.Combine(GetAvatarDirectoryFullPath(), newFileName);
+        // Save file to the file system and return the file path
+        File.WriteAllBytes(filePath, file);
+        return Task.FromResult(filePath);
     }
     
-    private string GetBaseDirectoryFullPath() => Path.Combine(BaseDirectory, CoreSettings.ProfileStorageBaseDirectory);
+    private string GetBaseDirectoryFullPath() => Path.Combine(BaseDirectory);
+    private string GetAvatarDirectoryFullPath() => Path.Combine(GetBaseDirectoryFullPath(), AvatarDirectory);
+    private string GetCoverDirectoryFullPath() => Path.Combine(GetBaseDirectoryFullPath(), CoverDirectory);
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Tomoyo.Utilities.Data;
+using Tomoyo.Core.Models;
+using Tomoyo.Core.Utilities.Data;
 
 namespace Tomoyo.Data;
 
@@ -17,7 +18,7 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
 
         #region Seed data
         
-        foreach (var role in TomoyoStarterData.Roles)
+        foreach (var role in StarterData.Roles)
         {
             builder.Entity<TomoyoRole>().HasData(role);
         }
@@ -45,6 +46,13 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
             .IsRequired(false);
 
         #endregion
-        
+
+        #region User Limitation
+
+        builder.Entity<TomoyoUser>()
+            .Property(x => x.UserName)
+            .HasMaxLength(30);
+
+        #endregion
     }
 }

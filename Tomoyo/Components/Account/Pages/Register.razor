@@ -4,6 +4,7 @@
 @using System.Text
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Tomoyo.Core.Models
 @using Tomoyo.Data
 
 @inject UserManager<TomoyoUser> UserManager
@@ -102,7 +103,8 @@
         
         await DatabaseContext.BaseProfiles.AddAsync(new BaseProfile
         {
-            User = user
+            User = user,
+            DisplayName = user.UserName
         });
         await DatabaseContext.SaveChangesAsync();
 

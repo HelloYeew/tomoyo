@@ -11,8 +11,8 @@ using Tomoyo.Data;
 namespace Tomoyo.Migrations
 {
     [DbContext(typeof(TomoyoDatabaseContext))]
-    [Migration("20250306094427_CreateProfile")]
-    partial class CreateProfile
+    [Migration("20250307062427_CreateIdentity")]
+    partial class CreateIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,7 +157,7 @@ namespace Tomoyo.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.BaseProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.BaseProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,7 +179,7 @@ namespace Tomoyo.Migrations
                     b.ToTable("BaseProfiles");
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.CosplayerProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.CosplayerProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -200,7 +200,7 @@ namespace Tomoyo.Migrations
                     b.ToTable("CosplayerProfiles");
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.PhotographerProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.PhotographerProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -221,7 +221,7 @@ namespace Tomoyo.Migrations
                     b.ToTable("PhotographerProfiles");
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.TomoyoUser", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.TomoyoUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -285,7 +285,7 @@ namespace Tomoyo.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.TomoyoRole", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.TomoyoRole", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
 
@@ -323,7 +323,7 @@ namespace Tomoyo.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Tomoyo.Data.TomoyoUser", null)
+                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -332,7 +332,7 @@ namespace Tomoyo.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Tomoyo.Data.TomoyoUser", null)
+                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -347,7 +347,7 @@ namespace Tomoyo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Tomoyo.Data.TomoyoUser", null)
+                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -356,43 +356,43 @@ namespace Tomoyo.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Tomoyo.Data.TomoyoUser", null)
+                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.BaseProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.BaseProfile", b =>
                 {
-                    b.HasOne("Tomoyo.Data.TomoyoUser", "User")
+                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", "User")
                         .WithOne("BaseProfile")
-                        .HasForeignKey("Tomoyo.Data.BaseProfile", "UserId")
+                        .HasForeignKey("Tomoyo.Core.Data.BaseProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.CosplayerProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.CosplayerProfile", b =>
                 {
-                    b.HasOne("Tomoyo.Data.TomoyoUser", "User")
+                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", "User")
                         .WithOne("CosplayerProfile")
-                        .HasForeignKey("Tomoyo.Data.CosplayerProfile", "UserId");
+                        .HasForeignKey("Tomoyo.Core.Data.CosplayerProfile", "UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.PhotographerProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.PhotographerProfile", b =>
                 {
-                    b.HasOne("Tomoyo.Data.TomoyoUser", "User")
+                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", "User")
                         .WithOne("PhotographerProfile")
-                        .HasForeignKey("Tomoyo.Data.PhotographerProfile", "UserId");
+                        .HasForeignKey("Tomoyo.Core.Data.PhotographerProfile", "UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Tomoyo.Data.TomoyoUser", b =>
+            modelBuilder.Entity("Tomoyo.Core.Data.TomoyoUser", b =>
                 {
                     b.Navigation("BaseProfile");
 

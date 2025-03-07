@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Tomoyo.Components.Account.Pages;
 using Tomoyo.Components.Account.Pages.Manage;
-using Tomoyo.Data;
+using Tomoyo.Core.Models;
 
 namespace Microsoft.AspNetCore.Routing;
 

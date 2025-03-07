@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Tomoyo.Data;
+namespace Tomoyo.Core.Models;
 
 public class TomoyoRole : IdentityRole
 {

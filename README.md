@@ -10,6 +10,11 @@ _TODO: Write full description_
 
 Tomoyo is build using ASP.NET Core on .NET 9.0. Frontend based on [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) SSR and [MudBlazor](https://mudblazor.com/).
 
+### Project Structure
+
+- `Tomoyo` : ASP.NET Core project for both server and client. Database context ,API controller and Blazor component are located here.
+- `Tomoyo.Core` : Core library including shared model, service and utilities.
+
 ### Requirement
 
 - [.NET 9 SDK](https://dotnet.microsoft.com)
@@ -18,12 +23,14 @@ Tomoyo is build using ASP.NET Core on .NET 9.0. Frontend based on [Blazor](https
 ### Setup database from EFCore
 
 ```shell
+cd Tomoyo
 dotnet ef database update
 ```
 
 ### Run the server
 
 ```shell
+cd Tomoyo
 dotnet run
 # Or use dotnet watch for hot reload
 dotnet watch

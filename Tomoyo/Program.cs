@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Tomoyo.Components;
 using Tomoyo.Components.Account;
+using Tomoyo.Core.Configurations;
+using Tomoyo.Core.Models;
+using Tomoyo.Core.Services;
 using Tomoyo.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +22,25 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+builder.Services.AddHttpClient();
+
+switch (CoreSettings.ProfileStorageType)
+{
+    case StorageType.Local:
+        builder.Services.AddSingleton<IProfileStorage, LocalProfileStorage>();
+        break;
+    
+    case StorageType.S3:
+        builder.Services.AddSingleton<IProfileStorage, S3ProfileStorage>();
+        break;
+    
+    default:
+        // TODO: Test should not initialize storage, but should still run.
+        break;
+        // throw new InvalidOperationException($"PROFILE_STORAGE_TYPE environment variable is not set to a valid value. (Value: {CoreSettings.ProfileStorageType})\n" +
+        //                                     $"Valid values are: {string.Join(", ", Enum.GetNames(typeof(StorageType)))}");
+}
 
 builder.Services.AddAuthentication(options =>
     {

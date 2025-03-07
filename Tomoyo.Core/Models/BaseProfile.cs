@@ -15,6 +15,15 @@ public class BaseProfile
     public string UserId { get; set; }
     public TomoyoUser User { get; set; } = null!;
     
+    [MaxLength(30)]
+    public string? DisplayName { get; set; }
+    
+    [MaxLength(500)]
+    public string? Avatar { get; set; }
+    
+    [MaxLength(500)]
+    public string? Cover { get; set; }
+    
     [MaxLength(500)]
     public string? Bio { get; set; }
 }

@@ -46,6 +46,13 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
             .IsRequired(false);
 
         #endregion
-        
+
+        #region User Limitation
+
+        builder.Entity<TomoyoUser>()
+            .Property(x => x.UserName)
+            .HasMaxLength(30);
+
+        #endregion
     }
 }

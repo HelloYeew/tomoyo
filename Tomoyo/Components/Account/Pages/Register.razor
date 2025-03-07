@@ -103,7 +103,8 @@
         
         await DatabaseContext.BaseProfiles.AddAsync(new BaseProfile
         {
-            User = user
+            User = user,
+            DisplayName = user.UserName
         });
         await DatabaseContext.SaveChangesAsync();
 

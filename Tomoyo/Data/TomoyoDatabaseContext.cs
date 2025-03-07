@@ -18,7 +18,7 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
 
         #region Seed data
         
-        foreach (var role in TomoyoStarterData.Roles)
+        foreach (var role in StarterData.Roles)
         {
             builder.Entity<TomoyoRole>().HasData(role);
         }

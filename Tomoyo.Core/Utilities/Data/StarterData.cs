@@ -5,7 +5,7 @@ namespace Tomoyo.Core.Utilities.Data;
 /// <summary>
 /// Starter data for seeding the database
 /// </summary>
-public static class TomoyoStarterData
+public static class StarterData
 {
     public static TomoyoRole[] Roles { get; } = new[]
     {

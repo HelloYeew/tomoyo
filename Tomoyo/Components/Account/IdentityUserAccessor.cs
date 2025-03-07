@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using Tomoyo.Data;
+using Tomoyo.Core.Models;
 
 namespace Tomoyo.Components.Account;
 

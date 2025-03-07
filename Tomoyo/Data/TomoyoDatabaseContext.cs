@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Tomoyo.Utilities.Data;
+using Tomoyo.Core.Models;
+using Tomoyo.Core.Utilities.Data;
 
 namespace Tomoyo.Data;
 

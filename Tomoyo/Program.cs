@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Tomoyo.Components;
 using Tomoyo.Components.Account;
+using Tomoyo.Core.Models;
 using Tomoyo.Data;
 
 var builder = WebApplication.CreateBuilder(args);

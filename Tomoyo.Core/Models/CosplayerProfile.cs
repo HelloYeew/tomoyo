@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Tomoyo.Data;
+namespace Tomoyo.Core.Models;
 
 /// <summary>
 /// Cosplayer side profile bind with the user, created when user want to create

@@ -1,6 +1,6 @@
-using Tomoyo.Data;
+using Tomoyo.Core.Models;
 
-namespace Tomoyo.Utilities.Data;
+namespace Tomoyo.Core.Utilities.Data;
 
 /// <summary>
 /// Starter data for seeding the database

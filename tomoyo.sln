@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomoyo", "Tomoyo\Tomoyo.csproj", "{3205284E-F8C5-4246-A66A-DFE330339D50}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomoyo.Core", "Tomoyo.Core\Tomoyo.Core.csproj", "{15CC3344-C862-4FDA-B73B-FE5E6D5D0016}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{3205284E-F8C5-4246-A66A-DFE330339D50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3205284E-F8C5-4246-A66A-DFE330339D50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3205284E-F8C5-4246-A66A-DFE330339D50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15CC3344-C862-4FDA-B73B-FE5E6D5D0016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15CC3344-C862-4FDA-B73B-FE5E6D5D0016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15CC3344-C862-4FDA-B73B-FE5E6D5D0016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15CC3344-C862-4FDA-B73B-FE5E6D5D0016}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

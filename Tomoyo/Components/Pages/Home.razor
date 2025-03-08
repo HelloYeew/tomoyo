@@ -5,11 +5,14 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @using Tomoyo.Core.Models
 @using Tomoyo.Core.Services
+@using Tomoyo.Data
 
 @inject AuthenticationStateProvider GetAuthenticationStateAsync
 @inject UserManager<TomoyoUser> UserManager
+@inject TomoyoDatabaseContext DatabaseContext
 @inject ISnackbar Snackbar
 @inject IProfileStorage ProfileStorage
 
@@ -84,21 +87,26 @@
 @code
 {
     private ClaimsPrincipal user = null!;
-    
-    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
-        user = authstate.User;
-    }
 
     private async void UploadAvatar(IBrowserFile file)
     {
-        var buffer = new byte[file.Size];
-        await file.OpenReadStream(maxAllowedSize: 5L * 1024L * 1024L).ReadAsync(buffer);
-        var fileName = await ProfileStorage.UploadAvatarAsync(user.Identity.Name, ProfileType.Base, buffer, file.Name);
+        var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        user = authstate.User;
+        if (user.Identity == null)
+        {
+            return;
+        }
+        var tomoyoUser = await UserManager.GetUserAsync(user);
+        if (tomoyoUser == null)
+        {
+            return;
+        }
+        var fileName = await ProfileStorage.UploadAvatarAsync(tomoyoUser.Id, ProfileType.Base, file.OpenReadStream(maxAllowedSize: Int64.MaxValue), file.Name);
         
         Snackbar.Add($"Avatar uploaded successfully: {fileName}", Severity.Success);
+        
+        var userEntity = await DatabaseContext.BaseProfiles.FirstAsync(x => x.UserId == tomoyoUser.Id);
+        userEntity.Avatar = fileName;
+        await DatabaseContext.SaveChangesAsync();
     }
 }

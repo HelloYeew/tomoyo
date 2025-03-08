@@ -22,14 +22,13 @@ public class LocalProfileStorage : IProfileStorage
             Directory.CreateDirectory(GetCoverDirectoryFullPath());
     }
     
-    public Task<string> UploadAvatarAsync(string userId, ProfileType profileType, byte[] file, string fileName, CancellationToken cancellationToken = default)
+    public async Task<string> UploadAvatarAsync(string userId, ProfileType profileType, Stream stream, string fileName, CancellationToken cancellationToken = default)
     {
-        // Save the avatar to the file system
         string newFileName = FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Avatar, profileType, fileName);
         string filePath = Path.Combine(GetAvatarDirectoryFullPath(), newFileName);
-        // Save file to the file system and return the file path
-        File.WriteAllBytes(filePath, file);
-        return Task.FromResult(filePath);
+        await using FileStream fileStream = new FileStream(filePath, FileMode.Create);
+        await stream.CopyToAsync(fileStream, cancellationToken);
+        return newFileName;
     }
     
     private string GetBaseDirectoryFullPath() => Path.Combine(BaseDirectory);

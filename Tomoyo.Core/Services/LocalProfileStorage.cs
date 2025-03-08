@@ -30,7 +30,24 @@ public class LocalProfileStorage : IProfileStorage
         await stream.CopyToAsync(fileStream, cancellationToken);
         return newFileName;
     }
-    
+
+    public async Task<GetAvatarResult> GetAvatarAsync(string userId, ProfileType profileType, CancellationToken cancellationToken = default)
+    {
+        string[] files = Directory.GetFiles(GetAvatarDirectoryFullPath(),
+            FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Avatar, profileType));
+        return files.Length == 0
+            ? new GetAvatarResult
+            {
+                Avatar = new byte[0],
+                FileName = ""
+            }
+            : new GetAvatarResult
+            {
+                Avatar = await File.ReadAllBytesAsync(files[0], cancellationToken),
+                FileName = Path.GetFileName(files[0])
+            };
+    }
+
     private string GetBaseDirectoryFullPath() => Path.Combine(BaseDirectory);
     private string GetAvatarDirectoryFullPath() => Path.Combine(GetBaseDirectoryFullPath(), AvatarDirectory);
     private string GetCoverDirectoryFullPath() => Path.Combine(GetBaseDirectoryFullPath(), CoverDirectory);

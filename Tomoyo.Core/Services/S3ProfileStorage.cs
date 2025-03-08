@@ -8,4 +8,9 @@ public class S3ProfileStorage : IProfileStorage
     {
         throw new NotImplementedException();
     }
+
+    public Task<GetAvatarResult> GetAvatarAsync(string userId, ProfileType profileType, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

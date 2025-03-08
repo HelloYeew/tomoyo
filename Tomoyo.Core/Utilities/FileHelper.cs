@@ -12,7 +12,7 @@ public static class FileHelper
     /// <param name="profileType">The <see cref="ProfileType"/></param>
     /// <param name="oldFileName">Old file name</param>
     /// <returns></returns>
-    public static string GenerateNewProfileDataFileName(string userId, ProfileDataType profileDataType, ProfileType profileType, string oldFileName)
+    public static string GenerateNewProfileDataFileName(string userId, ProfileDataType profileDataType, ProfileType profileType, string oldFileName = "dummy.*")
     {
         return $"{userId}-{profileDataType.ToString().ToLower()}-{StringHelper.GetProfileTypeString(profileType)}{Path.GetExtension(oldFileName)}";
     }

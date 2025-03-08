@@ -509,3 +509,6 @@ fabric.properties
 # Development SQLite database
 **/app.db
 **/app.db-*
+
+# Local profile directory
+Tomoyo/profiles/*

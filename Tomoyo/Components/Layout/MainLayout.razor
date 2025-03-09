@@ -1,6 +1,10 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Identity
+@using Tomoyo.Core.Models
+@inherits LayoutComponentBase
 
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+@inject UserManager<TomoyoUser> UserManager
 
 <MudThemeProvider Theme="_theme" @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
 <MudPopoverProvider/>
@@ -16,7 +20,7 @@
                 <MudMenu>
                     <ActivatorContent>
                         <MudAvatar>
-                            <MudImage Src="@Assets["images/avatar.gif"]" Alt="@context.User.Identity?.Name" Size="Size.Small" />
+                            <MudImage Src="@_profilePictureUrl" FallbackSrc="@Assets["images/avatar.gif"]" Alt="@context.User.Identity?.Name" Size="Size.Small" />
                         </MudAvatar>
                     </ActivatorContent>
                     <ChildContent>
@@ -61,6 +65,8 @@
     private bool _isDarkMode;
     private MudThemeProvider _mudThemeProvider;
 
+    private string _profilePictureUrl = "";
+
     private MudTheme _theme = new MudTheme()
     {
         Typography = new Typography()
@@ -71,6 +77,21 @@
             }
         }
     };
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        if (authState.User.Identity == null)
+        {
+            return;
+        }
+        var tomoyoUser = await UserManager.GetUserAsync(authState.User);
+        if (tomoyoUser == null)
+        {
+            return;
+        }
+        _profilePictureUrl = "/api/profiles/avatar/" + tomoyoUser.Id;
+    }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

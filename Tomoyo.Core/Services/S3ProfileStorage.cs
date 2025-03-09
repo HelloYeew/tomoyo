@@ -2,7 +2,7 @@ namespace Tomoyo.Core.Services;
 
 public class S3ProfileStorage : IProfileStorage
 {
-    public async Task<string> UploadAvatarAsync(string userId, Stream stream, string fileName, CancellationToken cancellationToken = default)
+    public Task<string> UploadAvatarAsync(string userId, Stream stream, string fileName, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

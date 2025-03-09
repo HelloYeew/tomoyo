@@ -19,5 +19,9 @@
     <ItemGroup>
         <ProjectReference Include="..\Tomoyo.Core\Tomoyo.Core.csproj"/>
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="profiles\avatars\" />
+    </ItemGroup>
 
 </Project>

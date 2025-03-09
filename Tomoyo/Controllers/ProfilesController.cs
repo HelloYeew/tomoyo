@@ -4,7 +4,7 @@ using Tomoyo.Core.Services;
 
 namespace Tomoyo.Controllers;
 
-[Route("profiles")]
+[Route("api/profiles")]
 [ApiController]
 public class ProfilesController : ControllerBase
 {
@@ -18,12 +18,12 @@ public class ProfilesController : ControllerBase
     [HttpGet("avatar/{userId}")]
     public async Task<IActionResult> GetAvatar(string userId, CancellationToken cancellationToken)
     {
-        var avatar = await _profileStorage.GetAvatarAsync(userId, cancellationToken);
+        GetAvatarResult avatar = await _profileStorage.GetAvatarAsync(userId, cancellationToken);
         if (avatar.FileName == "" || avatar.Avatar == null)
         {
             return new NotFoundResult();
         }
-        var cd = new ContentDisposition
+        ContentDisposition cd = new ContentDisposition
         {
             FileName = avatar.FileName,
             Inline = true

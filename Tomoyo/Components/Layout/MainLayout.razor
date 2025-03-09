@@ -2,7 +2,7 @@
 
 @inject NavigationManager Navigation
 
-<MudThemeProvider Theme="_theme"/>
+<MudThemeProvider Theme="_theme" @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
@@ -58,6 +58,8 @@
 
 @code {
     private bool _drawerOpen = true;
+    private bool _isDarkMode;
+    private MudThemeProvider _mudThemeProvider;
 
     private MudTheme _theme = new MudTheme()
     {
@@ -69,4 +71,20 @@
             }
         }
     };
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
+            StateHasChanged();
+        }
+    }
+
+    private Task OnSystemPreferenceChanged(bool newValue)
+    {
+        _isDarkMode = newValue;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 }

@@ -1,5 +1,4 @@
 using Tomoyo.Core.Configurations;
-using Tomoyo.Core.Models;
 using Tomoyo.Core.Utilities;
 
 namespace Tomoyo.Core.Services;
@@ -22,19 +21,19 @@ public class LocalProfileStorage : IProfileStorage
             Directory.CreateDirectory(GetCoverDirectoryFullPath());
     }
     
-    public async Task<string> UploadAvatarAsync(string userId, ProfileType profileType, Stream stream, string fileName, CancellationToken cancellationToken = default)
+    public async Task<string> UploadAvatarAsync(string userId, Stream stream, string fileName, CancellationToken cancellationToken = default)
     {
-        string newFileName = FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Avatar, profileType, fileName);
+        string newFileName = FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Avatar, fileName);
         string filePath = Path.Combine(GetAvatarDirectoryFullPath(), newFileName);
         await using FileStream fileStream = new FileStream(filePath, FileMode.Create);
         await stream.CopyToAsync(fileStream, cancellationToken);
         return newFileName;
     }
 
-    public async Task<GetAvatarResult> GetAvatarAsync(string userId, ProfileType profileType, CancellationToken cancellationToken = default)
+    public async Task<GetAvatarResult> GetAvatarAsync(string userId, CancellationToken cancellationToken = default)
     {
         string[] files = Directory.GetFiles(GetAvatarDirectoryFullPath(),
-            FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Avatar, profileType));
+            FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Avatar));
         return files.Length == 0
             ? new GetAvatarResult
             {

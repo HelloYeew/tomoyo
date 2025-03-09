@@ -4,16 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Tomoyo.Core.Models;
 
 /// <summary>
-/// Cosplayer side profile bind with the user, created when user want to create
+/// Base profile for application users, every user will have this object by default
 /// </summary>
-public class PhotographerProfile
+public class Profile
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+
+    [MaxLength(36)]
+    public string UserId { get; set; } = null!;
     
-    public string? UserId { get; set; }
-    public TomoyoUser? User { get; set; }
+    public TomoyoUser User { get; set; } = null!;
     
     [MaxLength(30)]
     public string? DisplayName { get; set; }

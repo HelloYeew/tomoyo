@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tomoyo.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateIdentity : Migration
+    public partial class InitialIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,7 +33,7 @@ namespace Tomoyo.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 30, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -160,61 +160,26 @@ namespace Tomoyo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BaseProfiles",
+                name: "Profiles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    DisplayName = table.Column<string>(type: "TEXT", maxLength: 30, nullable: true),
+                    Avatar = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    Cover = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     Bio = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BaseProfiles", x => x.Id);
+                    table.PrimaryKey("PK_Profiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BaseProfiles_AspNetUsers_UserId",
+                        name: "FK_Profiles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CosplayerProfiles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true),
-                    Bio = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CosplayerProfiles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CosplayerProfiles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PhotographerProfiles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true),
-                    Bio = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PhotographerProfiles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PhotographerProfiles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -265,20 +230,8 @@ namespace Tomoyo.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BaseProfiles_UserId",
-                table: "BaseProfiles",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CosplayerProfiles_UserId",
-                table: "CosplayerProfiles",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PhotographerProfiles_UserId",
-                table: "PhotographerProfiles",
+                name: "IX_Profiles_UserId",
+                table: "Profiles",
                 column: "UserId",
                 unique: true);
         }
@@ -302,13 +255,7 @@ namespace Tomoyo.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BaseProfiles");
-
-            migrationBuilder.DropTable(
-                name: "CosplayerProfiles");
-
-            migrationBuilder.DropTable(
-                name: "PhotographerProfiles");
+                name: "Profiles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

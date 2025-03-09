@@ -101,7 +101,7 @@
         
         await UserManager.AddToRoleAsync(user, "User");
         
-        await DatabaseContext.BaseProfiles.AddAsync(new BaseProfile
+        await DatabaseContext.Profiles.AddAsync(new Profile
         {
             User = user,
             DisplayName = user.UserName

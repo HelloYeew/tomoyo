@@ -1,6 +1,5 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
-using Tomoyo.Core.Models;
 using Tomoyo.Core.Services;
 
 namespace Tomoyo.Controllers;
@@ -16,10 +15,10 @@ public class ProfilesController : ControllerBase
         _profileStorage = profileStorage;
     }
     
-    [HttpGet("avatar/base/{userId}")]
+    [HttpGet("avatar/{userId}")]
     public async Task<IActionResult> GetAvatar(string userId, CancellationToken cancellationToken)
     {
-        var avatar = await _profileStorage.GetAvatarAsync(userId, ProfileType.Base, cancellationToken);
+        var avatar = await _profileStorage.GetAvatarAsync(userId, cancellationToken);
         if (avatar.FileName == "" || avatar.Avatar == null)
         {
             return new NotFoundResult();

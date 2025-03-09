@@ -101,11 +101,11 @@
         {
             return;
         }
-        var fileName = await ProfileStorage.UploadAvatarAsync(tomoyoUser.Id, ProfileType.Base, file.OpenReadStream(maxAllowedSize: Int64.MaxValue), file.Name);
+        var fileName = await ProfileStorage.UploadAvatarAsync(tomoyoUser.Id, file.OpenReadStream(maxAllowedSize: Int64.MaxValue), file.Name);
         
         Snackbar.Add($"Avatar uploaded successfully: {fileName}", Severity.Success);
         
-        var userEntity = await DatabaseContext.BaseProfiles.FirstAsync(x => x.UserId == tomoyoUser.Id);
+        var userEntity = await DatabaseContext.Profiles.FirstAsync(x => x.UserId == tomoyoUser.Id);
         userEntity.Avatar = fileName;
         await DatabaseContext.SaveChangesAsync();
     }

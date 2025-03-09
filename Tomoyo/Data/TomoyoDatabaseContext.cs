@@ -8,9 +8,7 @@ namespace Tomoyo.Data;
 public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> options)
     : IdentityDbContext<TomoyoUser>(options)
 {
-    public DbSet<BaseProfile> BaseProfiles { get; set; }
-    public DbSet<CosplayerProfile> CosplayerProfiles { get; set; }
-    public DbSet<PhotographerProfile> PhotographerProfiles { get; set; }
+    public DbSet<Profile> Profiles { get; set; }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -30,20 +28,8 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
         builder.Entity<TomoyoUser>()
             .HasOne(p => p.BaseProfile)
             .WithOne(p => p.User)
-            .HasForeignKey<BaseProfile>(p => p.UserId)
+            .HasForeignKey<Profile>(p => p.UserId)
             .IsRequired();
-
-        builder.Entity<TomoyoUser>()
-            .HasOne(p => p.CosplayerProfile)
-            .WithOne(p => p.User)
-            .HasForeignKey<CosplayerProfile>(p => p.UserId)
-            .IsRequired(false);
-        
-        builder.Entity<TomoyoUser>()
-            .HasOne(p => p.PhotographerProfile)
-            .WithOne(p => p.User)
-            .HasForeignKey<PhotographerProfile>(p => p.UserId)
-            .IsRequired(false);
 
         #endregion
 

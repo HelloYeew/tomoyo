@@ -1,4 +1,8 @@
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
 using Tomoyo.Core.Configurations;
+using Tomoyo.Core.Images;
+using Tomoyo.Core.Images.Processor;
 using Tomoyo.Core.Utilities;
 
 namespace Tomoyo.Core.Services;
@@ -25,8 +29,25 @@ public class LocalProfileStorage : IProfileStorage
     {
         string newFileName = FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Avatar, fileName);
         string filePath = Path.Combine(GetAvatarDirectoryFullPath(), newFileName);
-        await using FileStream fileStream = new FileStream(filePath, FileMode.Create);
-        await stream.CopyToAsync(fileStream, cancellationToken);
+
+        using (Image image = await Image.LoadAsync(stream, cancellationToken))
+        {
+            int size = 512;
+            image.ResizeAvatar(size);
+
+            // For more optimization, if it's not a gif, always save as jpg
+            if (!fileName.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
+            {
+                newFileName = Path.ChangeExtension(newFileName, ".jpg");
+                filePath = Path.Combine(GetAvatarDirectoryFullPath(), newFileName);
+                await image.SaveAsJpegAsync(filePath, new JpegEncoder { Quality = ProcessorConstant.AvatarJpegQuality }, cancellationToken);
+            }
+            else
+            {
+                await image.SaveAsync(filePath, cancellationToken);
+            }
+        }
+
         return newFileName;
     }
 

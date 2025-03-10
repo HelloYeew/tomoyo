@@ -1,6 +1,7 @@
 @page "/profile/{username}"
 @using Microsoft.AspNetCore.Identity
 @using Tomoyo.Core.Models
+@using Tomoyo.Core.Utilities
 @using Tomoyo.Data
 
 @inject UserManager<TomoyoUser> UserManager
@@ -18,7 +19,7 @@ else
     <div class="main-container">
         <div class="d-flex">
             <MudAvatar Size="Size.Large" Class="rounded-circle border border-4 border-accent" Style="width: 14rem; height: 14rem; margin-top: -4rem;">
-                <MudImage Src="" Alt="@UserProfile?.DisplayName" />
+                <MudImage Src="@_profilePictureUrl" FallbackSrc="@Assets["images/avatar.gif"]" Alt="@UserProfile?.DisplayName" />
             </MudAvatar>
             <div class="m-6 d-flex flex-column">
                 <MudText Typo="Typo.h3" Class="fw-bold">@UserProfile?.DisplayName</MudText>
@@ -51,7 +52,7 @@ else
             UserProfile = DatabaseContext.Profiles.FirstOrDefault(p => p.UserId == user.Id);
             User = user;
             pageTitle = $"{user.Profile?.DisplayName}'s Profile";
-            _profilePictureUrl = "/api/profiles/avatar/" + user.Id;
+            _profilePictureUrl = user.GetAvatarUrl();
         }
 
         StateHasChanged();

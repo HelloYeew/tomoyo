@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Tomoyo.Core.Models
+@using Tomoyo.Core.Utilities
 @inherits LayoutComponentBase
 
 @inject NavigationManager Navigation
@@ -92,8 +93,9 @@
         {
             return;
         }
-        _profilePictureUrl = "/api/profiles/avatar/" + tomoyoUser.Id;
-        _profileUrl = "profile/" + tomoyoUser.UserName;
+
+        _profilePictureUrl = tomoyoUser.GetAvatarUrl();
+        _profileUrl = tomoyoUser.GetProfileUrl();
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)

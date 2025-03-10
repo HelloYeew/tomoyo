@@ -24,7 +24,8 @@
                         </MudAvatar>
                     </ActivatorContent>
                     <ChildContent>
-                        <MudMenuItem Icon="@Icons.Material.Filled.Person">@context.User.Identity?.Name</MudMenuItem>
+                        <MudMenuItem Href="@_profileUrl" Icon="@Icons.Material.Filled.Person">@context.User.Identity?.Name</MudMenuItem>
+                        <MudMenuItem Href="settings" Icon="@Icons.Material.Filled.Settings">Settings</MudMenuItem>
                         <MudMenuItem Icon="@Icons.Material.Filled.Logout">
                             <form action="Account/Logout" method="post">
                                 <AntiforgeryToken/>
@@ -66,6 +67,7 @@
     private MudThemeProvider _mudThemeProvider;
 
     private string _profilePictureUrl = "";
+    private string _profileUrl = "";
 
     private MudTheme _theme = new MudTheme()
     {
@@ -91,6 +93,7 @@
             return;
         }
         _profilePictureUrl = "/api/profiles/avatar/" + tomoyoUser.Id;
+        _profileUrl = "profile/" + tomoyoUser.UserName;
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)

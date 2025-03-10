@@ -1,0 +1,57 @@
+@page "/settings"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using Tomoyo.Core.Models
+@using Tomoyo.Core.Services
+@using Tomoyo.Data
+
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+@inject UserManager<TomoyoUser> UserManager
+@inject TomoyoDatabaseContext DatabaseContext
+@inject IProfileStorage ProfileStorage
+@inject ISnackbar Snackbar
+
+<PageTitle>Settings</PageTitle>
+
+<h1>Settings</h1>
+
+<h2>Profile</h2>
+
+<div class="d-flex flex-column">
+    <div class="d-flex gap-1">
+        <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadAvatar">
+            <ActivatorContent>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.CloudUpload">
+                    Upload Avatar
+                </MudButton>
+            </ActivatorContent>
+        </MudFileUpload>
+    </div>
+
+</div>
+
+
+@code {
+    private TomoyoUser _user = null!;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _user = await UserManager.GetUserAsync((await GetAuthenticationStateAsync.GetAuthenticationStateAsync()).User) ?? throw new InvalidOperationException("User not found");
+    }
+    
+    private async void UploadAvatar(IBrowserFile? file)
+    {
+        string fileName = await ProfileStorage.UploadAvatarAsync(_user.Id, file.OpenReadStream(maxAllowedSize: Int64.MaxValue), file.Name);
+        
+        Snackbar.Add($"Avatar uploaded successfully: {fileName}", Severity.Success);
+
+        Profile userEntity = await DatabaseContext.Profiles.FirstAsync(x => x.UserId == _user.Id);
+        userEntity.Avatar = fileName;
+        await DatabaseContext.SaveChangesAsync();
+    }
+}

@@ -16,14 +16,14 @@
 else
 {
     <MudImage Src="@_coverPictureUrl" FallbackSrc="@Assets["images/cover.webp"]" Alt="Cover Image" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Center" Style="width: 100%;" Height="300"/>
-    <div class="main-container">
-        <div class="d-flex">
+    <div>
+        <div class="d-flex flex-wrap">
             <MudAvatar Size="Size.Large" Class="rounded-circle border border-4 border-accent" Style="width: 14rem; height: 14rem; margin-top: -4rem;">
                 <MudImage Src="@_profilePictureUrl" FallbackSrc="@Assets["images/avatar.gif"]" Alt="@UserProfile?.DisplayName" />
             </MudAvatar>
             <div class="m-6 d-flex flex-column">
                 <MudText Typo="Typo.h3" Class="fw-bold">@UserProfile?.DisplayName</MudText>
-                <MudText Typo="Typo.h5">@User.UserName</MudText>
+                <MudText Typo="Typo.caption">@User.UserName</MudText>
             </div>
         </div>
     </div>

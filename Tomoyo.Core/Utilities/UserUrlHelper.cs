@@ -8,9 +8,14 @@ public static class UserUrlHelper
     {
         return "/api/profiles/avatar/" + user.Id;
     }
+    
+    public static string GetCoverUrl(this TomoyoUser user)
+    {
+        return "/api/profiles/cover/" + user.Id;
+    }
 
     public static string GetProfileUrl(this TomoyoUser user)
     {
-        return "/profile/" + user.Id;
+        return "/profile/" + user.UserName;
     }
 }

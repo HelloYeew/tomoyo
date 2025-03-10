@@ -31,4 +31,21 @@ public class ProfilesController : ControllerBase
         Response.Headers.Append("Content-Disposition", cd.ToString());
         return new FileContentResult(avatar.Avatar, MimeMapping.MimeUtility.GetMimeMapping(avatar.FileName ?? ""));
     }
+    
+    [HttpGet("cover/{userId}")]
+    public async Task<IActionResult> GetCover(string userId, CancellationToken cancellationToken)
+    {
+        GetCoverResult cover = await _profileStorage.GetCoverAsync(userId, cancellationToken);
+        if (cover.FileName == "" || cover.Cover == null)
+        {
+            return new NotFoundResult();
+        }
+        ContentDisposition cd = new ContentDisposition
+        {
+            FileName = cover.FileName,
+            Inline = true
+        };
+        Response.Headers.Append("Content-Disposition", cd.ToString());
+        return new FileContentResult(cover.Cover, MimeMapping.MimeUtility.GetMimeMapping(cover.FileName ?? ""));
+    }
 }

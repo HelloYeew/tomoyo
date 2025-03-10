@@ -32,8 +32,7 @@ public class LocalProfileStorage : IProfileStorage
 
         using (Image image = await Image.LoadAsync(stream, cancellationToken))
         {
-            int size = 512;
-            image.ResizeAvatar(size);
+            image.ResizeAvatar();
 
             // For more optimization, if it's not a gif, always save as jpg
             if (!fileName.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
@@ -41,6 +40,31 @@ public class LocalProfileStorage : IProfileStorage
                 newFileName = Path.ChangeExtension(newFileName, ".jpg");
                 filePath = Path.Combine(GetAvatarDirectoryFullPath(), newFileName);
                 await image.SaveAsJpegAsync(filePath, new JpegEncoder { Quality = ProcessorConstant.AvatarJpegQuality }, cancellationToken);
+            }
+            else
+            {
+                await image.SaveAsync(filePath, cancellationToken);
+            }
+        }
+
+        return newFileName;
+    }
+    
+    public async Task<string> UploadCoverAsync(string userId, Stream stream, string fileName, CancellationToken cancellationToken = default)
+    {
+        string newFileName = FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Cover, fileName);
+        string filePath = Path.Combine(GetCoverDirectoryFullPath(), newFileName);
+
+        using (Image image = await Image.LoadAsync(stream, cancellationToken))
+        {
+            image.ResizeCover();
+
+            // For more optimization, if it's not a gif, always save as jpg
+            if (!fileName.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
+            {
+                newFileName = Path.ChangeExtension(newFileName, ".jpg");
+                filePath = Path.Combine(GetCoverDirectoryFullPath(), newFileName);
+                await image.SaveAsJpegAsync(filePath, new JpegEncoder { Quality = ProcessorConstant.CoverJpegQuality }, cancellationToken);
             }
             else
             {
@@ -64,6 +88,23 @@ public class LocalProfileStorage : IProfileStorage
             : new GetAvatarResult
             {
                 Avatar = await File.ReadAllBytesAsync(files[0], cancellationToken),
+                FileName = Path.GetFileName(files[0])
+            };
+    }
+    
+    public async Task<GetCoverResult> GetCoverAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        string[] files = Directory.GetFiles(GetCoverDirectoryFullPath(),
+            FileHelper.GenerateNewProfileDataFileName(userId, FileHelper.ProfileDataType.Cover));
+        return files.Length == 0
+            ? new GetCoverResult
+            {
+                Cover = new byte[0],
+                FileName = ""
+            }
+            : new GetCoverResult
+            {
+                Cover = await File.ReadAllBytesAsync(files[0], cancellationToken),
                 FileName = Path.GetFileName(files[0])
             };
     }

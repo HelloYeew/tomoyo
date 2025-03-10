@@ -15,7 +15,7 @@
 }
 else
 {
-    <MudImage Src="@Assets["images/cover.png"]" Alt="Cover Image" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Center" Style="width: 100%;" Height="300"/>
+    <MudImage Src="@_coverPictureUrl" FallbackSrc="@Assets["images/cover.webp"]" Alt="Cover Image" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Center" Style="width: 100%;" Height="300"/>
     <div class="main-container">
         <div class="d-flex">
             <MudAvatar Size="Size.Large" Class="rounded-circle border border-4 border-accent" Style="width: 14rem; height: 14rem; margin-top: -4rem;">
@@ -29,8 +29,6 @@ else
     </div>
 }
 
-<p>@User.Id</p>
-
 @code {
     [Parameter] public string Username { get; set; }
 
@@ -38,6 +36,7 @@ else
     private Core.Models.Profile? UserProfile { get; set; }
     private string pageTitle = "Profile";
     private string _profilePictureUrl = "";
+    private string _coverPictureUrl = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,6 +52,7 @@ else
             User = user;
             pageTitle = $"{user.Profile?.DisplayName}'s Profile";
             _profilePictureUrl = user.GetAvatarUrl();
+            _coverPictureUrl = user.GetCoverUrl();
         }
 
         StateHasChanged();

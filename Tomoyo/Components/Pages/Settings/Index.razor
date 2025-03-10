@@ -33,6 +33,17 @@
         </MudFileUpload>
     </div>
 
+    <div class="d-flex gap-1">
+        <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadCover">
+            <ActivatorContent>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.CloudUpload">
+                    Upload Cover
+                </MudButton>
+            </ActivatorContent>
+        </MudFileUpload>
+    </div>
 </div>
 
 
@@ -52,6 +63,17 @@
 
         Profile userEntity = await DatabaseContext.Profiles.FirstAsync(x => x.UserId == _user.Id);
         userEntity.Avatar = fileName;
+        await DatabaseContext.SaveChangesAsync();
+    }
+    
+    private async void UploadCover(IBrowserFile? file)
+    {
+        string fileName = await ProfileStorage.UploadCoverAsync(_user.Id, file.OpenReadStream(maxAllowedSize: Int64.MaxValue), file.Name);
+        
+        Snackbar.Add($"Cover uploaded successfully: {fileName}", Severity.Success);
+
+        Profile userEntity = await DatabaseContext.Profiles.FirstAsync(x => x.UserId == _user.Id);
+        userEntity.Cover = fileName;
         await DatabaseContext.SaveChangesAsync();
     }
 }

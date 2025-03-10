@@ -1,0 +1,59 @@
+@page "/profile/{username}"
+@using Microsoft.AspNetCore.Identity
+@using Tomoyo.Core.Models
+@using Tomoyo.Data
+
+@inject UserManager<TomoyoUser> UserManager
+@inject TomoyoDatabaseContext DatabaseContext
+
+<PageTitle>@pageTitle</PageTitle>
+
+@if (User == null)
+{
+    <p>User not found</p>
+}
+else
+{
+    <MudImage Src="@Assets["images/cover.png"]" Alt="Cover Image" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Center" Style="width: 100%;" Height="300"/>
+    <div class="main-container">
+        <div class="d-flex">
+            <MudAvatar Size="Size.Large" Class="rounded-circle border border-4 border-accent" Style="width: 14rem; height: 14rem; margin-top: -4rem;">
+                <MudImage Src="" Alt="@UserProfile?.DisplayName" />
+            </MudAvatar>
+            <div class="m-6 d-flex flex-column">
+                <MudText Typo="Typo.h3" Class="fw-bold">@UserProfile?.DisplayName</MudText>
+                <MudText Typo="Typo.h5">@User.UserName</MudText>
+            </div>
+        </div>
+    </div>
+}
+
+<p>@User.Id</p>
+
+@code {
+    [Parameter] public string Username { get; set; }
+
+    private TomoyoUser? User { get; set; }
+    private Core.Models.Profile? UserProfile { get; set; }
+    private string pageTitle = "Profile";
+    private string _profilePictureUrl = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserManager.FindByNameAsync(Username);
+        if (user == null)
+        {
+            User = null;
+            pageTitle = "User not found";
+        }
+        else
+        {
+            UserProfile = DatabaseContext.Profiles.FirstOrDefault(p => p.UserId == user.Id);
+            User = user;
+            pageTitle = $"{user.Profile?.DisplayName}'s Profile";
+            _profilePictureUrl = "/api/profiles/avatar/" + user.Id;
+        }
+
+        StateHasChanged();
+    }
+}

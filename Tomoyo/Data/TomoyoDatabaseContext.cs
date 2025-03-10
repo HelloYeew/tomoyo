@@ -26,7 +26,7 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
         #region Foreign key relation
 
         builder.Entity<TomoyoUser>()
-            .HasOne(p => p.BaseProfile)
+            .HasOne(p => p.Profile)
             .WithOne(p => p.User)
             .HasForeignKey<Profile>(p => p.UserId)
             .IsRequired();

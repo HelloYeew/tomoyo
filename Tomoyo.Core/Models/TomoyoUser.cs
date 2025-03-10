@@ -4,5 +4,5 @@ namespace Tomoyo.Core.Models;
 
 public class TomoyoUser : IdentityUser
 {
-    public Profile? BaseProfile { get; set; }
+    public Profile? Profile { get; set; }
 }

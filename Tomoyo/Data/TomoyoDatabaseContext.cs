@@ -10,6 +10,8 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
 {
     public DbSet<Profile> Profiles { get; set; }
     
+    public DbSet<Picture> Pictures { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -31,6 +33,11 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
             .HasForeignKey<Profile>(p => p.UserId)
             .IsRequired();
 
+        builder.Entity<TomoyoUser>()
+            .HasMany(p => p.UploadPictures)
+            .WithOne(p => p.User)
+            .HasForeignKey(p => p.UploadUserId);
+
         #endregion
 
         #region User Limitation
@@ -38,6 +45,20 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
         builder.Entity<TomoyoUser>()
             .Property(x => x.UserName)
             .HasMaxLength(30);
+
+        #endregion
+
+        #region DateTime auto update
+
+        builder.Entity<Picture>()
+            .Property(x => x.CreatedAt)
+            .HasDefaultValueSql("GETDATE()");
+        
+        builder.Entity<Picture>()
+            .Property(x => x.UpdatedAt)
+            .HasDefaultValueSql("GETDATE()");
+        
+        // TODO: Update UpdatedAt when the entity is updated
 
         #endregion
     }

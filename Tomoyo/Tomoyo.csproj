@@ -11,12 +11,17 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.*"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.*"/>
+        <PackageReference Include="MimeMapping" Version="3.1.0" />
         <PackageReference Include="MudBlazor" Version="8.*"/>
         <PackageReference Include="Extensions.MudBlazor.StaticInput" Version="3.*"/>
     </ItemGroup>
     
     <ItemGroup>
         <ProjectReference Include="..\Tomoyo.Core\Tomoyo.Core.csproj"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="profiles\avatars\" />
     </ItemGroup>
 
 </Project>

@@ -11,8 +11,8 @@ using Tomoyo.Data;
 namespace Tomoyo.Migrations
 {
     [DbContext(typeof(TomoyoDatabaseContext))]
-    [Migration("20250307062427_CreateIdentity")]
-    partial class CreateIdentity
+    [Migration("20250310042920_RenameBaseProfile")]
+    partial class RenameBaseProfile
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,18 +157,31 @@ namespace Tomoyo.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Tomoyo.Core.Data.BaseProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Models.Profile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Bio")
                         .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cover")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -176,52 +189,10 @@ namespace Tomoyo.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("BaseProfiles");
+                    b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("Tomoyo.Core.Data.CosplayerProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Bio")
-                        .HasMaxLength(500)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("CosplayerProfiles");
-                });
-
-            modelBuilder.Entity("Tomoyo.Core.Data.PhotographerProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Bio")
-                        .HasMaxLength(500)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("PhotographerProfiles");
-                });
-
-            modelBuilder.Entity("Tomoyo.Core.Data.TomoyoUser", b =>
+            modelBuilder.Entity("Tomoyo.Core.Models.TomoyoUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -270,7 +241,7 @@ namespace Tomoyo.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256)
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -285,7 +256,7 @@ namespace Tomoyo.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Tomoyo.Core.Data.TomoyoRole", b =>
+            modelBuilder.Entity("Tomoyo.Core.Models.TomoyoRole", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
 
@@ -323,7 +294,7 @@ namespace Tomoyo.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", null)
+                    b.HasOne("Tomoyo.Core.Models.TomoyoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -332,7 +303,7 @@ namespace Tomoyo.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", null)
+                    b.HasOne("Tomoyo.Core.Models.TomoyoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -347,7 +318,7 @@ namespace Tomoyo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", null)
+                    b.HasOne("Tomoyo.Core.Models.TomoyoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -356,49 +327,27 @@ namespace Tomoyo.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", null)
+                    b.HasOne("Tomoyo.Core.Models.TomoyoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Tomoyo.Core.Data.BaseProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Models.Profile", b =>
                 {
-                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", "User")
-                        .WithOne("BaseProfile")
-                        .HasForeignKey("Tomoyo.Core.Data.BaseProfile", "UserId")
+                    b.HasOne("Tomoyo.Core.Models.TomoyoUser", "User")
+                        .WithOne("Profile")
+                        .HasForeignKey("Tomoyo.Core.Models.Profile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Tomoyo.Core.Data.CosplayerProfile", b =>
+            modelBuilder.Entity("Tomoyo.Core.Models.TomoyoUser", b =>
                 {
-                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", "User")
-                        .WithOne("CosplayerProfile")
-                        .HasForeignKey("Tomoyo.Core.Data.CosplayerProfile", "UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Tomoyo.Core.Data.PhotographerProfile", b =>
-                {
-                    b.HasOne("Tomoyo.Core.Data.TomoyoUser", "User")
-                        .WithOne("PhotographerProfile")
-                        .HasForeignKey("Tomoyo.Core.Data.PhotographerProfile", "UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Tomoyo.Core.Data.TomoyoUser", b =>
-                {
-                    b.Navigation("BaseProfile");
-
-                    b.Navigation("CosplayerProfile");
-
-                    b.Navigation("PhotographerProfile");
+                    b.Navigation("Profile");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,60 @@
+@page "/profile/{username}"
+@using Microsoft.AspNetCore.Identity
+@using Tomoyo.Core.Models
+@using Tomoyo.Core.Utilities
+@using Tomoyo.Data
+
+@inject UserManager<TomoyoUser> UserManager
+@inject TomoyoDatabaseContext DatabaseContext
+
+<PageTitle>@pageTitle</PageTitle>
+
+@if (User == null)
+{
+    <p>User not found</p>
+}
+else
+{
+    <MudImage Src="@_coverPictureUrl" FallbackSrc="@Assets["images/cover.webp"]" Alt="Cover Image" ObjectFit="ObjectFit.Cover" ObjectPosition="ObjectPosition.Center" Style="width: 100%;" Height="300"/>
+    <div>
+        <div class="d-flex flex-wrap">
+            <MudAvatar Size="Size.Large" Class="rounded-circle border border-4 border-accent" Style="width: 14rem; height: 14rem; margin-top: -4rem;">
+                <MudImage Src="@_profilePictureUrl" FallbackSrc="@Assets["images/avatar.gif"]" Alt="@UserProfile?.DisplayName" />
+            </MudAvatar>
+            <div class="m-6 d-flex flex-column">
+                <MudText Typo="Typo.h3" Class="fw-bold">@UserProfile?.DisplayName</MudText>
+                <MudText Typo="Typo.caption">@User.UserName</MudText>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Username { get; set; }
+
+    private TomoyoUser? User { get; set; }
+    private Core.Models.Profile? UserProfile { get; set; }
+    private string pageTitle = "Profile";
+    private string _profilePictureUrl = "";
+    private string _coverPictureUrl = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserManager.FindByNameAsync(Username);
+        if (user == null)
+        {
+            User = null;
+            pageTitle = "User not found";
+        }
+        else
+        {
+            UserProfile = DatabaseContext.Profiles.FirstOrDefault(p => p.UserId == user.Id);
+            User = user;
+            pageTitle = $"{user.Profile?.DisplayName}'s Profile";
+            _profilePictureUrl = user.GetAvatarUrl();
+            _coverPictureUrl = user.GetCoverUrl();
+        }
+
+        StateHasChanged();
+    }
+}

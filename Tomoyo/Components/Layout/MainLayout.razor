@@ -1,8 +1,13 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Identity
+@using Tomoyo.Core.Models
+@using Tomoyo.Core.Utilities
+@inherits LayoutComponentBase
 
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+@inject UserManager<TomoyoUser> UserManager
 
-<MudThemeProvider Theme="_theme"/>
+<MudThemeProvider Theme="_theme" @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
@@ -16,11 +21,12 @@
                 <MudMenu>
                     <ActivatorContent>
                         <MudAvatar>
-                            <MudImage Src="@Assets["images/avatar.gif"]" Alt="@context.User.Identity?.Name" Size="Size.Small" />
+                            <MudImage Src="@_profilePictureUrl" FallbackSrc="@Assets["images/avatar.gif"]" Alt="@context.User.Identity?.Name" Size="Size.Small" />
                         </MudAvatar>
                     </ActivatorContent>
                     <ChildContent>
-                        <MudMenuItem Icon="@Icons.Material.Filled.Person">@context.User.Identity?.Name</MudMenuItem>
+                        <MudMenuItem Href="@_profileUrl" Icon="@Icons.Material.Filled.Person">@context.User.Identity?.Name</MudMenuItem>
+                        <MudMenuItem Href="settings" Icon="@Icons.Material.Filled.Settings">Settings</MudMenuItem>
                         <MudMenuItem Icon="@Icons.Material.Filled.Logout">
                             <form action="Account/Logout" method="post">
                                 <AntiforgeryToken/>
@@ -58,6 +64,11 @@
 
 @code {
     private bool _drawerOpen = true;
+    private bool _isDarkMode;
+    private MudThemeProvider _mudThemeProvider;
+
+    private string _profilePictureUrl = "";
+    private string _profileUrl = "";
 
     private MudTheme _theme = new MudTheme()
     {
@@ -69,4 +80,38 @@
             }
         }
     };
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        if (authState.User.Identity == null)
+        {
+            return;
+        }
+        var tomoyoUser = await UserManager.GetUserAsync(authState.User);
+        if (tomoyoUser == null)
+        {
+            return;
+        }
+
+        _profilePictureUrl = tomoyoUser.GetAvatarUrl();
+        _profileUrl = tomoyoUser.GetProfileUrl();
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
+            StateHasChanged();
+        }
+    }
+
+    private Task OnSystemPreferenceChanged(bool newValue)
+    {
+        _isDarkMode = newValue;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 }

@@ -8,4 +8,6 @@ public static class ProcessorConstant
     public const int CoverWidth = 1920;
     public const int CoverHeight = 1080;
     public const int CoverJpegQuality = 90;
+    
+    public const int PhotoMaxSize = 30 * 1024 * 1024;
 }

@@ -1,0 +1,102 @@
+@page "/create/photo"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Tomoyo.Core.Images
+@using Tomoyo.Core.Models
+@using Tomoyo.Core.Services
+@using Tomoyo.Data
+
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+@inject UserManager<TomoyoUser> UserManager
+@inject TomoyoDatabaseContext DatabaseContext
+@inject IProfileStorage ProfileStorage
+@inject ISnackbar Snackbar
+
+<PageTitle>Upload new photo</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Upload new photo</MudText>
+
+<MudGrid>
+    <MudItem md="6">
+        <EditForm Model="Input" method="post" OnValidSubmit="UploadPhoto" FormName="upload-photo">
+            <DataAnnotationsValidator/>
+            
+            <MudText Typo="Typo.body1" GutterBottom="true">Upload a new photo.</MudText>
+
+            <MudGrid>
+                <MudItem md="12">
+                    <MudStaticTextField For="@(() => Input.Name)" @bind-Value="Input.Name"
+                                        Label="Name" Placeholder="name"
+                                        UserAttributes="@(new() { { "aria-required", "true" } })"/>
+                </MudItem>
+                <MudItem md="12">
+                    <div class="d-flex gap-4">
+                        <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UpdatePhoto">
+                            <ActivatorContent>
+                                <MudButton Variant="Variant.Filled"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.CloudUpload">
+                                    Upload Photo
+                                </MudButton>
+                            </ActivatorContent>
+                        </MudFileUpload>
+                        <div>
+                            @if (Input.File != null)
+                            {
+                                <MudText Typo="Typo.body2">@Input.File.Name</MudText>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <MudText Typo="Typo.caption">Max file size: 30MB</MudText>
+                    </div>
+                </MudItem>
+                <MudItem md="12">
+                    <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">Upload</MudStaticButton>
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private TomoyoUser _user = null!;
+    
+    [SupplyParameterFromForm]
+    private UploadPhotoModel Input { get; set; } = new UploadPhotoModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _user = await UserManager.GetUserAsync((await GetAuthenticationStateAsync.GetAuthenticationStateAsync()).User) ?? throw new InvalidOperationException("User not found");
+    }
+
+    private sealed class UploadPhotoModel
+    {
+        [Required]
+        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "Name")]
+        public string Name { get; set; } = "";
+        
+        [Required]
+        [Display(Name = "Photo File")]
+        public IBrowserFile File { get; set; } = null!;
+    }
+    
+    private async void UpdatePhoto(IBrowserFile? file)
+    {
+        if (file!.Size > ProcessorConstant.PhotoMaxSize)
+        {
+            Snackbar.Add("File size is too large. Maximum file size is 30MB.", Severity.Error);
+            return;
+        }
+        Input.File = file;
+    }
+    
+    private async Task UploadPhoto()
+    {
+        
+    }
+}

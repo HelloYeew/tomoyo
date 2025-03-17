@@ -43,6 +43,20 @@ switch (CoreSettings.ProfileStorageType)
         //                                     $"Valid values are: {string.Join(", ", Enum.GetNames(typeof(StorageType)))}");
 }
 
+switch (CoreSettings.PhotoStorageType)
+{
+    case StorageType.Local:
+        builder.Services.AddSingleton<IPhotoStorage, LocalPhotoStorage>();
+        break;
+    
+    case StorageType.S3:
+        builder.Services.AddSingleton<IPhotoStorage, S3PhotoStorage>();
+        break;
+    
+    default:
+        break;
+}
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = IdentityConstants.ApplicationScheme;

@@ -13,8 +13,6 @@ public static class CoreSettings
             if (!Enum.TryParse(value, true, out StorageType storageType) || !Enum.IsDefined(storageType))
                 return null;
             
-            Console.WriteLine($"Storage Type: {storageType}");
-            
             return storageType;
         }
     }
@@ -28,7 +26,31 @@ public static class CoreSettings
             if (string.IsNullOrWhiteSpace(value))
                 return "profiles";
             
-            Console.WriteLine($"Storage Base Directory: {value}");
+            return value;
+        }
+    }
+
+    public static StorageType? PhotoStorageType
+    {
+        get
+        {
+            string? value = Environment.GetEnvironmentVariable("PHOTO_STORAGE_TYPE");
+
+            if (!Enum.TryParse(value, true, out StorageType storageType) || !Enum.IsDefined(storageType))
+                return null;
+            
+            return storageType;
+        }
+    }
+    
+    public static string PhotoStorageBaseDirectory
+    {
+        get
+        {
+            string? value = Environment.GetEnvironmentVariable("PHOTO_STORAGE_BASE_DIRECTORY");
+
+            if (string.IsNullOrWhiteSpace(value))
+                return "photos";
             
             return value;
         }

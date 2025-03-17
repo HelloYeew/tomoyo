@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tomoyo.Core.Models;
 
-public class Picture
+public class Photo
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

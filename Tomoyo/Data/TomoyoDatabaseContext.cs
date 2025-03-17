@@ -10,7 +10,7 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
 {
     public DbSet<Profile> Profiles { get; set; }
     
-    public DbSet<Picture> Pictures { get; set; }
+    public DbSet<Photo> Pictures { get; set; }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -34,7 +34,7 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
             .IsRequired();
 
         builder.Entity<TomoyoUser>()
-            .HasMany(p => p.UploadPictures)
+            .HasMany(p => p.UploadPhotos)
             .WithOne(p => p.User)
             .HasForeignKey(p => p.UploadUserId);
 
@@ -50,11 +50,11 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
 
         #region DateTime auto update
 
-        builder.Entity<Picture>()
+        builder.Entity<Photo>()
             .Property(x => x.CreatedAt)
             .HasDefaultValueSql("GETDATE()");
         
-        builder.Entity<Picture>()
+        builder.Entity<Photo>()
             .Property(x => x.UpdatedAt)
             .HasDefaultValueSql("GETDATE()");
         

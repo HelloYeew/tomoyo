@@ -6,5 +6,5 @@ public class TomoyoUser : IdentityUser
 {
     public Profile? Profile { get; set; }
     
-    public ICollection<Picture> UploadPictures { get; }
+    public ICollection<Photo> UploadPhotos { get; }
 }

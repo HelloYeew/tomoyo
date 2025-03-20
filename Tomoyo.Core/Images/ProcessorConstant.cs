@@ -13,6 +13,5 @@ public static class ProcessorConstant
     public const int PhotoMaxWidth = 2560;
     public const int PhotoMaxHeight = 1440;
     public const int PhotoOriginalMaxJpegQuality = 90;
-    public const int PhotoWatermarkedMaxJpegQuality = 90;
     public const int PhotoThumbnaildMaxJpegQuality = 75;
 }

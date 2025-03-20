@@ -36,7 +36,6 @@ public static class FileHelper
     public enum PhotoDataType
     {
         Original,
-        Thumbnail,
-        Watermarked
+        Thumbnail
     }
 }

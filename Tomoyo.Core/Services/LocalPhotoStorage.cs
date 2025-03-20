@@ -1,5 +1,6 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Webp;
 using Tomoyo.Core.Configurations;
 using Tomoyo.Core.Images;
 using Tomoyo.Core.Images.Processor;
@@ -39,9 +40,10 @@ public class LocalPhotoStorage : IPhotoStorage
         {
             // Resize full image -> size that we want
             image.ResizePhoto();
-            await image.SaveAsJpegAsync(newOriginalFilename, new JpegEncoder { Quality = ProcessorConstant.PhotoOriginalMaxJpegQuality }, cancellationToken);
+            await image.SaveAsJpegAsync(newOriginalFilename, new JpegEncoder { Quality = ProcessorConstant.PhotoOriginalEncoderQuality }, cancellationToken);
             
-            // TODO: Save thumbnail and watermarked
+            image.ResizeThumbnail();
+            await image.SaveAsWebpAsync(newThumbnailFilename, new WebpEncoder { Quality = ProcessorConstant.PhotoThumbnaildEncoderQuality }, cancellationToken);
         }
 
         return new UploadPhotoResult()

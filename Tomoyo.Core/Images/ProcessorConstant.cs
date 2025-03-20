@@ -10,8 +10,9 @@ public static class ProcessorConstant
     public const int CoverJpegQuality = 90;
     
     public const int PhotoMaxSize = 30 * 1024 * 1024;
-    public const int PhotoMaxWidth = 2560;
-    public const int PhotoMaxHeight = 1440;
-    public const int PhotoOriginalMaxJpegQuality = 90;
-    public const int PhotoThumbnaildMaxJpegQuality = 75;
+    public const int PhotoOriginalMaxWidth = 2560;
+    public const int PhotoOriginalMaxHeight = 1440;
+    public const int PhotoThumbnailSize = 360;
+    public const int PhotoOriginalEncoderQuality = 90;
+    public const int PhotoThumbnaildEncoderQuality = 75;
 }

@@ -22,9 +22,9 @@ public static class FileHelper
     /// <param name="photoDataType">The <see cref="PhotoDataType"/></param>
     /// <param name="oldFileName">Old file name for file extension</param>
     /// <returns></returns>
-    public static string GenerateNewPhotoDataFileName(string userId, int photoId, PhotoDataType photoDataType, string oldFileName = "dummy.*")
+    public static string GenerateNewPhotoDataFileName(int photoId, PhotoDataType photoDataType, string oldFileName = "dummy.*")
     {
-        return $"{userId}-{photoId}-{photoDataType.ToString().ToLower()}{Path.GetExtension(oldFileName)}";
+        return $"{photoId}-{photoDataType.ToString().ToLower()}{Path.GetExtension(oldFileName)}";
     }
     
     public enum ProfileDataType

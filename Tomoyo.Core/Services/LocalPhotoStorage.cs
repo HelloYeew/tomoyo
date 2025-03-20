@@ -29,8 +29,8 @@ public class LocalPhotoStorage : IPhotoStorage
     public async Task<UploadPhotoResult> UploadPhotoAsync(string userId, int photoId, Stream stream, string fileName,
         CancellationToken cancellationToken = default)
     {
-        string newOriginalFilename = FileHelper.GenerateNewPhotoDataFileName(userId, photoId, FileHelper.PhotoDataType.Original, fileName);
-        string newThumbnailFilename = FileHelper.GenerateNewPhotoDataFileName(userId, photoId, FileHelper.PhotoDataType.Thumbnail, fileName);
+        string newOriginalFilename = FileHelper.GenerateNewPhotoDataFileName(photoId, FileHelper.PhotoDataType.Original, fileName);
+        string newThumbnailFilename = FileHelper.GenerateNewPhotoDataFileName(photoId, FileHelper.PhotoDataType.Thumbnail, fileName);
         
         // Will save an original and watermarked as JPEG and thumbnail as WEBP
         newOriginalFilename = Path.ChangeExtension(newOriginalFilename, ".jpg");

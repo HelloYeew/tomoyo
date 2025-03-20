@@ -2,6 +2,7 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @using Tomoyo.Core.Images
 @using Tomoyo.Core.Models
 @using Tomoyo.Core.Services
@@ -12,7 +13,7 @@
 @inject AuthenticationStateProvider GetAuthenticationStateAsync
 @inject UserManager<TomoyoUser> UserManager
 @inject TomoyoDatabaseContext DatabaseContext
-@inject IProfileStorage ProfileStorage
+@inject IPhotoStorage PhotoStorage
 @inject ISnackbar Snackbar
 
 <PageTitle>Upload new photo</PageTitle>
@@ -94,9 +95,37 @@
         }
         Input.File = file;
     }
-    
+
     private async Task UploadPhoto()
     {
+        int latestPhotoId = await DatabaseContext.Photos.OrderByDescending(x => x.Id).Select(x => x.Id).FirstOrDefaultAsync();
         
+        var transaction = await DatabaseContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            UploadPhotoResult result = await PhotoStorage.UploadPhotoAsync(_user.Id, latestPhotoId + 1, Input.File.OpenReadStream(maxAllowedSize: ProcessorConstant.PhotoMaxSize), Input.File.Name);
+
+            await DatabaseContext.Photos.AddAsync(new Core.Models.Photo()
+            {
+                Name = Input.Name,
+                OriginalFileName = result.OriginalFileName,
+                ThumbnailFileName = result.ThumbnailFileName,
+                UploadUser = _user
+            });
+
+            await DatabaseContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+            
+            Snackbar.Add("Photo uploaded successfully.", Severity.Success);
+            // TODO: Redirect to the photo page
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            // TODO: Remove error text on production
+            Snackbar.Add($"An error occurred while uploading the photo: {e.Message}", Severity.Error);
+        }
     }
+
 }

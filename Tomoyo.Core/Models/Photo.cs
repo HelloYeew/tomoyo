@@ -12,13 +12,19 @@ public class Photo
     [MaxLength(200)]
     public string? Name { get; set; }
     
+    [MaxLength(1000)]
+    public string? Description { get; set; }
+    
     [MaxLength(200)]
-    public string? FileName { get; set; }
+    public string? OriginalFileName { get; set; }
+    
+    [MaxLength(200)]
+    public string? ThumbnailFileName { get; set; }
     
     [MaxLength(36)]
     public string? UploadUserId { get; set; }
     
-    public TomoyoUser? User { get; set; }
+    public TomoyoUser? UploadUser { get; set; }
     
     public DateTime CreatedAt { get; set; }
     

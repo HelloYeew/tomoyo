@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Tomoyo.Core.Models;
 using Tomoyo.Core.Utilities.Data;
 
@@ -10,7 +11,7 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
 {
     public DbSet<Profile> Profiles { get; set; }
     
-    public DbSet<Photo> Pictures { get; set; }
+    public DbSet<Photo> Photos { get; set; }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -35,7 +36,7 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
 
         builder.Entity<TomoyoUser>()
             .HasMany(p => p.UploadPhotos)
-            .WithOne(p => p.User)
+            .WithOne(p => p.UploadUser)
             .HasForeignKey(p => p.UploadUserId);
 
         #endregion
@@ -47,19 +48,27 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
             .HasMaxLength(30);
 
         #endregion
+    }
 
-        #region DateTime auto update
-
-        builder.Entity<Photo>()
-            .Property(x => x.CreatedAt)
-            .HasDefaultValueSql("GETDATE()");
+    public override int SaveChanges()
+    {
+        foreach (EntityEntry entry in ChangeTracker.Entries())
+        {
+            if (entry.Entity is Photo photo)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        photo.CreatedAt = DateTime.Now;
+                        photo.UpdatedAt = DateTime.Now;
+                        break;
+                    case EntityState.Modified:
+                        photo.UpdatedAt = DateTime.Now;
+                        break;
+                }
+            }
+        }
         
-        builder.Entity<Photo>()
-            .Property(x => x.UpdatedAt)
-            .HasDefaultValueSql("GETDATE()");
-        
-        // TODO: Update UpdatedAt when the entity is updated
-
-        #endregion
+        return base.SaveChanges();
     }
 }

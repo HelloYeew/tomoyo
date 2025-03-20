@@ -11,7 +11,7 @@ public static class CoreSettings
             string? value = Environment.GetEnvironmentVariable("PROFILE_STORAGE_TYPE");
 
             if (!Enum.TryParse(value, true, out StorageType storageType) || !Enum.IsDefined(storageType))
-                return null;
+                return StorageType.Local;
             
             return storageType;
         }
@@ -37,7 +37,7 @@ public static class CoreSettings
             string? value = Environment.GetEnvironmentVariable("PHOTO_STORAGE_TYPE");
 
             if (!Enum.TryParse(value, true, out StorageType storageType) || !Enum.IsDefined(storageType))
-                return null;
+                return StorageType.Local;
             
             return storageType;
         }

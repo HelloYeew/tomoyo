@@ -50,7 +50,7 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
         #endregion
     }
 
-    public override int SaveChanges()
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         foreach (EntityEntry entry in ChangeTracker.Entries())
         {
@@ -69,6 +69,6 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
             }
         }
         
-        return base.SaveChanges();
+        return base.SaveChangesAsync(cancellationToken);
     }
 }

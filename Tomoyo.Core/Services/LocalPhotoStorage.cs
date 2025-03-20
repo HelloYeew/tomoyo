@@ -40,17 +40,17 @@ public class LocalPhotoStorage : IPhotoStorage
         {
             // Resize full image -> size that we want
             image.ResizePhoto();
-            await image.SaveAsJpegAsync(newOriginalFilename, new JpegEncoder { Quality = ProcessorConstant.PhotoOriginalEncoderQuality }, cancellationToken);
+            await image.SaveAsJpegAsync(Path.Combine(GetOriginalDirectoryFullPath(), newOriginalFilename), new JpegEncoder { Quality = ProcessorConstant.PhotoOriginalEncoderQuality }, cancellationToken);
             
             image.ResizeThumbnail();
-            await image.SaveAsWebpAsync(newThumbnailFilename, new WebpEncoder { Quality = ProcessorConstant.PhotoThumbnaildEncoderQuality }, cancellationToken);
+            await image.SaveAsWebpAsync(Path.Combine(GetThumbnailDirectoryFullPath(), newThumbnailFilename), new WebpEncoder { Quality = ProcessorConstant.PhotoThumbnaildEncoderQuality }, cancellationToken);
         }
 
         return new UploadPhotoResult()
         {
             FileName = fileName,
             OriginalFileName = newOriginalFilename,
-            ThumbnailFileName = newThumbnailFilename,
+            ThumbnailFileName = newThumbnailFilename
         };
     }
     

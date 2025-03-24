@@ -1,0 +1,44 @@
+@page "/photo/{id:int}"
+@using Tomoyo.Core.Models
+@using Tomoyo.Core.Utilities
+@using Tomoyo.Data
+
+@inject TomoyoDatabaseContext DatabaseContext
+
+<PageTitle>@pageTitle</PageTitle>
+
+@if (Photo == null)
+{
+    <p>Photo not found</p>
+}
+else
+{
+    <MudImage Src="@Photo.GetPhotoUrl()" FallbackSrc="@Assets["images/cover.webp"]" Alt="Photo" Style="width: 100%;"/>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    
+    private string pageTitle = "Profile";
+    private Photo? Photo { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        var photo = DatabaseContext.Photos.FirstOrDefault(p => p.Id == Id);
+        
+        if (photo == null)
+        {
+            Photo = null;
+            pageTitle = "Photo not found";
+        }
+        else
+        {
+            Photo = photo;
+            pageTitle = photo.Name ?? "Photo";
+        }
+        
+        return base.OnInitializedAsync();
+    }
+}

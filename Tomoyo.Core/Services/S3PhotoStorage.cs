@@ -7,4 +7,9 @@ public class S3PhotoStorage : IPhotoStorage
     {
         throw new NotImplementedException();
     }
+
+    public Task<GetPhotoResult> GetPhotoAsync(int photoId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -53,7 +53,25 @@ public class LocalPhotoStorage : IPhotoStorage
             ThumbnailFileName = newThumbnailFilename
         };
     }
-    
+
+    public async Task<GetPhotoResult> GetPhotoAsync(int photoId, CancellationToken cancellationToken = default)
+    {
+        string[] files = Directory.GetFiles(GetOriginalDirectoryFullPath(),
+            FileHelper.GenerateNewPhotoDataFileName(photoId, FileHelper.PhotoDataType.Original));
+
+        return files.Length == 0
+            ? new GetPhotoResult()
+            {
+                Photo = new byte[0],
+                FileName = ""
+            }
+            : new GetPhotoResult()
+            {
+                Photo = await File.ReadAllBytesAsync(files[0], cancellationToken),
+                FileName = Path.GetFileName(files[0])
+            };
+    }
+
     private string GetBaseDirectoryFullPath() => Path.Combine(BaseDirectory);
     private string GetOriginalDirectoryFullPath() => Path.Combine(GetBaseDirectoryFullPath(), OriginalDirectory);
     private string GetThumbnailDirectoryFullPath() => Path.Combine(GetBaseDirectoryFullPath(), ThumbnailDirectory);

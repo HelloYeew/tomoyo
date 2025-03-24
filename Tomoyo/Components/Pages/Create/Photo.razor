@@ -13,6 +13,7 @@
 @inject AuthenticationStateProvider GetAuthenticationStateAsync
 @inject UserManager<TomoyoUser> UserManager
 @inject TomoyoDatabaseContext DatabaseContext
+@inject NavigationManager NavigationManager
 @inject IPhotoStorage PhotoStorage
 @inject ISnackbar Snackbar
 
@@ -118,7 +119,7 @@
             await transaction.CommitAsync();
             
             Snackbar.Add("Photo uploaded successfully.", Severity.Success);
-            // TODO: Redirect to the photo page
+            NavigationManager.NavigateTo($"/photo/{latestPhotoId + 1}");
         }
         catch (Exception e)
         {

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tomoyo.Data;
 
@@ -10,9 +11,11 @@ using Tomoyo.Data;
 namespace Tomoyo.Migrations
 {
     [DbContext(typeof(TomoyoDatabaseContext))]
-    partial class TomoyoDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250310193034_InitialPicture")]
+    partial class InitialPicture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -154,33 +157,29 @@ namespace Tomoyo.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Tomoyo.Core.Models.Photo", b =>
+            modelBuilder.Entity("Tomoyo.Core.Models.Picture", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
+                    b.Property<string>("FileName")
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OriginalFileName")
-                        .HasMaxLength(200)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ThumbnailFileName")
-                        .HasMaxLength(200)
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("UploadUserId")
                         .HasMaxLength(36)
@@ -190,7 +189,7 @@ namespace Tomoyo.Migrations
 
                     b.HasIndex("UploadUserId");
 
-                    b.ToTable("Photos");
+                    b.ToTable("Pictures");
                 });
 
             modelBuilder.Entity("Tomoyo.Core.Models.Profile", b =>
@@ -370,13 +369,13 @@ namespace Tomoyo.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Tomoyo.Core.Models.Photo", b =>
+            modelBuilder.Entity("Tomoyo.Core.Models.Picture", b =>
                 {
-                    b.HasOne("Tomoyo.Core.Models.TomoyoUser", "UploadUser")
-                        .WithMany("UploadPhotos")
+                    b.HasOne("Tomoyo.Core.Models.TomoyoUser", "User")
+                        .WithMany("UploadPictures")
                         .HasForeignKey("UploadUserId");
 
-                    b.Navigation("UploadUser");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Tomoyo.Core.Models.Profile", b =>
@@ -394,7 +393,7 @@ namespace Tomoyo.Migrations
                 {
                     b.Navigation("Profile");
 
-                    b.Navigation("UploadPhotos");
+                    b.Navigation("UploadPictures");
                 });
 #pragma warning restore 612, 618
         }

@@ -38,9 +38,24 @@ switch (CoreSettings.ProfileStorageType)
     
     default:
         // TODO: Test should not initialize storage, but should still run.
+        throw new InvalidOperationException($"PROFILE_STORAGE_TYPE environment variable is not set to a valid value. (Value: {CoreSettings.ProfileStorageType})\n" +
+                                            $"Valid values are: {string.Join(", ", Enum.GetNames(typeof(StorageType)))}");
+}
+
+switch (CoreSettings.PhotoStorageType)
+{
+    case StorageType.Local:
+        builder.Services.AddSingleton<IPhotoStorage, LocalPhotoStorage>();
         break;
-        // throw new InvalidOperationException($"PROFILE_STORAGE_TYPE environment variable is not set to a valid value. (Value: {CoreSettings.ProfileStorageType})\n" +
-        //                                     $"Valid values are: {string.Join(", ", Enum.GetNames(typeof(StorageType)))}");
+    
+    case StorageType.S3:
+        builder.Services.AddSingleton<IPhotoStorage, S3PhotoStorage>();
+        break;
+    
+    default:
+        // TODO: Test should not initialize storage, but should still run.
+        throw new InvalidOperationException($"PHOTO_STORAGE_TYPE environment variable is not set to a valid value. (Value: {CoreSettings.PhotoStorageType})\n" +
+                                            $"Valid values are: {string.Join(", ", Enum.GetNames(typeof(StorageType)))}");
 }
 
 builder.Services.AddAuthentication(options =>

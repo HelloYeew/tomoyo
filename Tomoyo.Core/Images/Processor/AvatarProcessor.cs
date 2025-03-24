@@ -9,7 +9,7 @@ public static class AvatarProcessor
     /// Resize an image to be square and crop as avatar (centered)
     /// </summary>
     /// <param name="image">ImageSharp <see cref="Image"/></param>
-    /// <param name="size">Target size</param>
+    /// <param name="size">Target size, default to <see cref="ProcessorConstant"/></param>
     public static void ResizeAvatar(this Image image, int size = ProcessorConstant.AvatarSize)
     {
         image.Mutate(x => x.Resize(new ResizeOptions

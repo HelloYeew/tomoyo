@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Tomoyo.Core.Models;
 using Tomoyo.Core.Utilities.Data;
 
@@ -9,6 +10,8 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
     : IdentityDbContext<TomoyoUser>(options)
 {
     public DbSet<Profile> Profiles { get; set; }
+    
+    public DbSet<Photo> Photos { get; set; }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -31,6 +34,11 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
             .HasForeignKey<Profile>(p => p.UserId)
             .IsRequired();
 
+        builder.Entity<TomoyoUser>()
+            .HasMany(p => p.UploadPhotos)
+            .WithOne(p => p.UploadUser)
+            .HasForeignKey(p => p.UploadUserId);
+
         #endregion
 
         #region User Limitation
@@ -40,5 +48,27 @@ public class TomoyoDatabaseContext(DbContextOptions<TomoyoDatabaseContext> optio
             .HasMaxLength(30);
 
         #endregion
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        foreach (EntityEntry entry in ChangeTracker.Entries())
+        {
+            if (entry.Entity is Photo photo)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        photo.CreatedAt = DateTime.Now;
+                        photo.UpdatedAt = DateTime.Now;
+                        break;
+                    case EntityState.Modified:
+                        photo.UpdatedAt = DateTime.Now;
+                        break;
+                }
+            }
+        }
+        
+        return base.SaveChangesAsync(cancellationToken);
     }
 }

@@ -18,10 +18,14 @@
         <MudSpacer/>
         <AuthorizeView>
             <Authorized>
+                <MudMenu Icon="@Icons.Material.Filled.Create"
+                         AriaLabel="Open create menu">
+                    <MudMenuItem Href="/create/photo" Icon="@Icons.Material.Filled.AddAPhoto" Label="Photo" />
+                </MudMenu>
                 <MudMenu>
                     <ActivatorContent>
                         <MudAvatar>
-                            <MudImage Src="@_profilePictureUrl" FallbackSrc="@Assets["images/avatar.gif"]" Alt="@context.User.Identity?.Name" Size="Size.Small" />
+                            <MudImage Src="@_profilePictureUrl" FallbackSrc="@Assets["images/avatar.gif"]" Alt="@context.User.Identity?.Name" Size="Size.Small"/>
                         </MudAvatar>
                     </ActivatorContent>
                     <ChildContent>
@@ -38,7 +42,6 @@
                         </MudMenuItem>
                     </ChildContent>
                 </MudMenu>
-                <MudButton Href="Account/Manage" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Person">Account</MudButton>
             </Authorized>
             <NotAuthorized>
                 <MudButton Href="Account/Login" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Password">Login</MudButton>

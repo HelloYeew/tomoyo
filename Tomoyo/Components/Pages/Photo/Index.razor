@@ -13,7 +13,16 @@
 }
 else
 {
-    <MudImage Src="@Photo.GetPhotoUrl()" FallbackSrc="@Assets["images/cover.webp"]" Alt="Photo" Style="width: 100%;"/>
+    <MudGrid>
+        <MudItem md="8">
+            <MudImage Fluid="true" Src="@Photo.GetPhotoUrl()" FallbackSrc="@Assets["images/cover.webp"]" Alt="Photo" Class="rounded-lg"/>
+        </MudItem>
+        <MudItem md="4">
+            <MudText Typo="Typo.h6" GutterBottom="true">@Photo.Name</MudText>
+            <MudText Typo="Typo.body1">@Photo.Description</MudText>
+            <MudText Typo="Typo.body2">@Photo.CreatedAt.ToString("dd/MM/yyyy")</MudText>
+        </MudItem>
+    </MudGrid>
 }
 
 
